@@ -4,6 +4,7 @@ import PolicyRow from "./PolicyRow";
 import PolicyEditModal from "./PolicyEditModal";
 import { IconSearch, IconRefresh } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 type Filter = "All" | "Active" | "Inactive";
 
@@ -75,12 +76,26 @@ export default function PoliciesTable() {
           ))}
         </div>
 
-        <button className="p-2 rounded text-nb-gray-500 hover:text-nb-gray-300 hover:bg-nb-gray-920 transition-colors border border-nb-gray-900">
+        {/* Refresh */}
+        <button
+          onClick={() =>
+            toast("Policies refreshed", { icon: "↻", duration: 2000 })
+          }
+          className="p-2 rounded text-nb-gray-500 hover:text-nb-gray-300 hover:bg-nb-gray-920 transition-colors border border-nb-gray-900"
+        >
           <IconRefresh size={14} />
         </button>
 
         {/* Add policy */}
-        <button className="ml-auto flex items-center gap-2 px-4 py-2 text-sm font-medium rounded bg-netbird text-white hover:bg-netbird-500 transition-colors">
+        <button
+          onClick={() =>
+            toast("Add Policy requires a live backend connection", {
+              icon: "ℹ",
+              duration: 3000,
+            })
+          }
+          className="ml-auto flex items-center gap-2 px-4 py-2 text-sm font-medium rounded bg-netbird text-white hover:bg-netbird-500 transition-colors"
+        >
           + Add Policy
         </button>
       </div>

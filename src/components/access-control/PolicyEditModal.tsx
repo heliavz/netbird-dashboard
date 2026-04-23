@@ -7,6 +7,7 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import { useState } from "react";
+import { toast } from "sonner";
 
 interface PolicyEditModalProps {
   policy: Policy | null;
@@ -294,7 +295,15 @@ export default function PolicyEditModal({
             >
               Cancel
             </button>
-            <button className="px-4 py-2 text-sm font-medium rounded bg-netbird text-white hover:bg-netbird-500 transition-colors">
+            <button
+              onClick={() => {
+                toast.success(`Policy "${policy.name}" updated successfully`, {
+                  duration: 3000,
+                });
+                onClose();
+              }}
+              className="px-4 py-2 text-sm font-medium rounded bg-netbird text-white hover:bg-netbird-500 transition-colors"
+            >
               Save Changes
             </button>
           </div>

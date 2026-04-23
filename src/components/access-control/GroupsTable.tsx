@@ -12,6 +12,7 @@ import {
   IconNetwork,
 } from "@tabler/icons-react";
 import { useState } from "react";
+import { toast } from "sonner";
 
 type Filter = "All" | "Used" | "Unused";
 
@@ -123,7 +124,15 @@ function GroupRow({ group }: { group: Group }) {
       <td className="px-4 py-3">
         <div className="flex items-center justify-end">
           {!group.isDefault && (
-            <button className="p-1.5 rounded text-nb-gray-600 hover:text-red-400 hover:bg-nb-gray-900 transition-colors">
+            <button
+              onClick={() =>
+                toast(`Group "${group.name}" cannot be deleted in this demo`, {
+                  icon: "⚠",
+                  duration: 3000,
+                })
+              }
+              className="p-1.5 rounded text-nb-gray-600 hover:text-red-400 hover:bg-nb-gray-900 transition-colors"
+            >
               <IconTrash size={14} />
             </button>
           )}
@@ -193,12 +202,26 @@ export default function GroupsTable() {
           ))}
         </div>
 
-        <button className="p-2 rounded text-nb-gray-500 hover:text-nb-gray-300 hover:bg-nb-gray-920 transition-colors border border-nb-gray-900">
+        {/* Refresh */}
+        <button
+          onClick={() =>
+            toast("Groups refreshed", { icon: "↻", duration: 2000 })
+          }
+          className="p-2 rounded text-nb-gray-500 hover:text-nb-gray-300 hover:bg-nb-gray-920 transition-colors border border-nb-gray-900"
+        >
           <IconRefresh size={14} />
         </button>
 
         {/* Create group */}
-        <button className="ml-auto flex items-center gap-2 px-4 py-2 text-sm font-medium rounded bg-netbird text-white hover:bg-netbird-500 transition-colors">
+        <button
+          onClick={() =>
+            toast("Create Group requires a live backend connection", {
+              icon: "ℹ",
+              duration: 3000,
+            })
+          }
+          className="ml-auto flex items-center gap-2 px-4 py-2 text-sm font-medium rounded bg-netbird text-white hover:bg-netbird-500 transition-colors"
+        >
           + Create Group
         </button>
       </div>

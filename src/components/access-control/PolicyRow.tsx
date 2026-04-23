@@ -3,6 +3,7 @@ import { type Policy } from "@/data/mockData";
 import PolicySummary from "./PolicySummary";
 import { IconChevronDown, IconPencil, IconTrash } from "@tabler/icons-react";
 import { useState } from "react";
+import { toast } from "sonner";
 
 interface PolicyRowProps {
   policy: Policy;
@@ -49,7 +50,18 @@ export default function PolicyRow({
         {/* Active toggle */}
         <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
           <button
-            onClick={() => onToggleActive(policy.id)}
+            onClick={() => {
+              onToggleActive(policy.id);
+              toast(
+                policy.active
+                  ? `Policy "${policy.name}" disabled`
+                  : `Policy "${policy.name}" enabled`,
+                {
+                  icon: policy.active ? "⏸" : "▶",
+                  duration: 2500,
+                },
+              );
+            }}
             className={cn(
               "w-8 h-4 rounded-full relative transition-colors cursor-pointer focus:outline-none",
               policy.active ? "bg-netbird" : "bg-nb-gray-800",
@@ -71,24 +83,47 @@ export default function PolicyRow({
         </td>
 
         {/* Actions */}
+        {/* Actions */}
         <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
           <div className="flex items-center gap-1 justify-end">
             <button
               onClick={() => onEdit(policy)}
               className="p-1.5 rounded text-nb-gray-500 hover:text-nb-gray-200 hover:bg-nb-gray-900 transition-colors"
+              title="Edit policy"
             >
               <IconPencil size={14} />
             </button>
-            <button className="p-1.5 rounded text-nb-gray-500 hover:text-red-400 hover:bg-nb-gray-900 transition-colors">
+            <button
+              className="p-1.5 rounded text-nb-gray-500 hover:text-red-400 hover:bg-nb-gray-900 transition-colors"
+              title="Delete policy"
+              onClick={() =>
+                toast(
+                  `Policy "${policy.name}" cannot be deleted in this demo`,
+                  {
+                    icon: "⚠",
+                    duration: 3000,
+                  },
+                )
+              }
+            >
               <IconTrash size={14} />
             </button>
-            <IconChevronDown
-              size={14}
-              className={cn(
-                "text-nb-gray-600 ml-1 transition-transform duration-200",
-                expanded && "rotate-180",
-              )}
-            />
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setExpanded((prev) => !prev);
+              }}
+              className="p-1.5 rounded text-nb-gray-500 hover:text-nb-gray-200 hover:bg-nb-gray-900 transition-colors"
+              title={expanded ? "Collapse" : "Expand"}
+            >
+              <IconChevronDown
+                size={14}
+                className={cn(
+                  "transition-transform duration-200",
+                  expanded && "rotate-180",
+                )}
+              />
+            </button>
           </div>
         </td>
       </tr>
