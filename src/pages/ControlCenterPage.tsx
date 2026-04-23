@@ -3,6 +3,7 @@ import NetworkMap from "@/components/control-center/NetworkMap";
 import SummaryBar from "@/components/control-center/SummaryBar";
 import { peers } from "@/data/mockData";
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 export default function ControlCenterPage() {
   const [viewMode, setViewMode] = useState<"empty" | "populated">("empty");
@@ -60,14 +61,27 @@ export default function ControlCenterPage() {
 
           {/* Map tabs */}
           <div className="flex items-center gap-1 mb-4 border-b border-nb-gray-900">
-            {["Peers", "Groups", "Networks"].map((tab) => (
+            {[
+              { label: "Peers", available: true },
+              { label: "Groups", available: false },
+              { label: "Networks", available: false },
+            ].map((tab) => (
               <button
-                key={tab}
-                className="px-4 py-2 text-sm text-nb-gray-400 border-b-2 border-transparent
-                           hover:text-nb-gray-200 transition-colors
-                           first:text-nb-gray-100 first:border-netbird"
+                key={tab.label}
+                disabled={!tab.available}
+                className={cn(
+                  "px-4 py-2 text-sm border-b-2 transition-colors -mb-px",
+                  tab.available && tab.label === "Peers"
+                    ? "text-nb-gray-100 border-netbird"
+                    : "text-nb-gray-600 border-transparent cursor-not-allowed",
+                )}
               >
-                {tab}
+                {tab.label}
+                {!tab.available && (
+                  <span className="ml-2 text-[10px] text-nb-gray-700">
+                    coming soon
+                  </span>
+                )}
               </button>
             ))}
           </div>
