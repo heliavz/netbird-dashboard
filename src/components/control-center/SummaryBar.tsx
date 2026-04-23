@@ -1,6 +1,5 @@
 import { stats } from "@/data/mockData";
 import {
-  IconActivity,
   IconCircleCheck,
   IconCircleDashed,
   IconNetwork,
