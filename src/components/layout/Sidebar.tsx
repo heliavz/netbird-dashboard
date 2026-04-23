@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import {
   IconActivity,
   IconAdjustmentsHorizontal,
-  IconCode,
+  IconChevronDown,
   IconFileDescription,
   IconKey,
   IconLayoutDashboard,
@@ -14,7 +14,8 @@ import {
   IconUsers,
   IconWorldWww,
 } from "@tabler/icons-react";
-import { NavLink } from "react-router-dom";
+import { useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 
 interface NavItem {
   label: string;
@@ -105,44 +106,58 @@ const bottomItems: NavItem[] = [
   },
 ];
 
-function NavItemRow({ item, depth = 0 }: { item: NavItem; depth?: number }) {
-  const isChild = depth > 0;
+function NavItemRow({ item }: { item: NavItem }) {
+  const location = useLocation();
+
+  const isChildActive = item.children?.some((child) =>
+    location.pathname.startsWith(child.to),
+  );
+
+  const [open, setOpen] = useState<boolean>(isChildActive ?? false);
 
   if (item.children) {
     return (
       <div>
-        <div
+        <button
+          onClick={() => setOpen((prev) => !prev)}
           className={cn(
-            "flex items-center gap-2.5 px-3 py-2 text-nb-gray-400 text-sm rounded cursor-default select-none",
-            "hover:text-nb-gray-200 hover:bg-nb-gray-920",
+            "w-full flex items-center gap-2.5 px-3 py-2 text-sm rounded transition-colors",
+            isChildActive
+              ? "text-nb-gray-200"
+              : "text-nb-gray-400 hover:text-nb-gray-200 hover:bg-nb-gray-920",
           )}
         >
           {item.icon}
           <span>{item.label}</span>
-          {item.beta && (
-            <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded bg-nb-gray-800 text-nb-gray-400 font-medium">
-              Beta
-            </span>
-          )}
-        </div>
-        <div className="ml-3 border-l border-nb-gray-900">
-          {item.children.map((child) => (
-            <NavLink
-              key={child.to}
-              to={child.to}
-              className={({ isActive }) =>
-                cn(
-                  "flex items-center px-4 py-1.5 text-sm rounded transition-colors",
-                  isActive
-                    ? "text-nb-gray-100 bg-nb-gray-920"
-                    : "text-nb-gray-500 hover:text-nb-gray-200 hover:bg-nb-gray-920",
-                )
-              }
-            >
-              {child.label}
-            </NavLink>
-          ))}
-        </div>
+          <IconChevronDown
+            size={14}
+            className={cn(
+              "ml-auto transition-transform duration-200 text-nb-gray-500",
+              open && "rotate-180",
+            )}
+          />
+        </button>
+
+        {open && (
+          <div className="ml-3 border-l border-nb-gray-900 mb-0.5">
+            {item.children.map((child) => (
+              <NavLink
+                key={child.to}
+                to={child.to}
+                className={({ isActive }) =>
+                  cn(
+                    "flex items-center px-4 py-1.5 text-sm rounded transition-colors",
+                    isActive
+                      ? "text-nb-gray-100"
+                      : "text-nb-gray-500 hover:text-nb-gray-200 hover:bg-nb-gray-920",
+                  )
+                }
+              >
+                {child.label}
+              </NavLink>
+            ))}
+          </div>
+        )}
       </div>
     );
   }
@@ -157,11 +172,10 @@ function NavItemRow({ item, depth = 0 }: { item: NavItem; depth?: number }) {
           isActive
             ? "text-nb-gray-100 bg-nb-gray-920"
             : "text-nb-gray-400 hover:text-nb-gray-200 hover:bg-nb-gray-920",
-          isChild && "pl-6",
         )
       }
     >
-      {!isChild && item.icon}
+      {item.icon}
       <span>{item.label}</span>
       {item.beta && (
         <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded bg-nb-gray-800 text-nb-gray-400 font-medium">
@@ -177,14 +191,7 @@ export default function Sidebar() {
     <aside className="fixed top-0 left-0 h-screen w-[220px] bg-nb-gray-950 border-r border-nb-gray-900 flex flex-col z-20">
       {/* Logo */}
       <div className="flex items-center gap-2 px-4 py-4 border-b border-nb-gray-900">
-        <img
-          src="/netbird-logo.svg"
-          alt="NetBird"
-          className="h-6"
-          onError={(e) => {
-            e.currentTarget.style.display = "none";
-          }}
-        />
+        <span className="text-netbird font-bold text-lg">✦</span>
         <span className="text-nb-gray-100 font-semibold text-base tracking-tight">
           netbird
         </span>
