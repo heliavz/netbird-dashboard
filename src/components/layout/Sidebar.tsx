@@ -17,12 +17,17 @@ import {
 import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 
+interface NavChild {
+  label: string;
+  to: string;
+}
+
 interface NavItem {
   label: string;
   to: string;
   icon: React.ReactNode;
   beta?: boolean;
-  children?: { label: string; to: string }[];
+  children?: NavChild[];
 }
 
 const navItems: NavItem[] = [
@@ -93,7 +98,11 @@ const navItems: NavItem[] = [
 ];
 
 const bottomItems: NavItem[] = [
-  { label: "Settings", to: "/settings", icon: <IconSettings size={17} /> },
+  {
+    label: "Settings",
+    to: "/settings",
+    icon: <IconSettings size={17} />,
+  },
   {
     label: "Integrations",
     to: "/integrations",
@@ -106,39 +115,52 @@ const bottomItems: NavItem[] = [
   },
 ];
 
-function NavItemRow({ item }: { item: NavItem }) {
-  const location = useLocation();
+interface SidebarProps {
+  collapsed: boolean;
+}
 
+function NavItemRow({
+  item,
+  collapsed,
+}: {
+  item: NavItem;
+  collapsed: boolean;
+}) {
+  const location = useLocation();
   const isChildActive = item.children?.some((child) =>
     location.pathname.startsWith(child.to),
   );
-
   const [open, setOpen] = useState<boolean>(isChildActive ?? false);
 
   if (item.children) {
     return (
       <div>
         <button
-          onClick={() => setOpen((prev) => !prev)}
+          onClick={() => !collapsed && setOpen((prev) => !prev)}
           className={cn(
             "w-full flex items-center gap-2.5 px-3 py-2 text-sm rounded transition-colors",
             isChildActive
               ? "text-nb-gray-200"
               : "text-nb-gray-400 hover:text-nb-gray-200 hover:bg-nb-gray-920",
           )}
+          title={collapsed ? item.label : undefined}
         >
-          {item.icon}
-          <span>{item.label}</span>
-          <IconChevronDown
-            size={14}
-            className={cn(
-              "ml-auto transition-transform duration-200 text-nb-gray-500",
-              open && "rotate-180",
-            )}
-          />
+          <span className="flex-shrink-0">{item.icon}</span>
+          {!collapsed && (
+            <>
+              <span className="truncate">{item.label}</span>
+              <IconChevronDown
+                size={14}
+                className={cn(
+                  "ml-auto transition-transform duration-200 text-nb-gray-500 flex-shrink-0",
+                  open && "rotate-180",
+                )}
+              />
+            </>
+          )}
         </button>
 
-        {open && (
+        {open && !collapsed && (
           <div className="ml-3 border-l border-nb-gray-900 mb-0.5">
             {item.children.map((child) => (
               <NavLink
@@ -174,52 +196,74 @@ function NavItemRow({ item }: { item: NavItem }) {
             : "text-nb-gray-400 hover:text-nb-gray-200 hover:bg-nb-gray-920",
         )
       }
+      title={collapsed ? item.label : undefined}
     >
-      {item.icon}
-      <span>{item.label}</span>
-      {item.beta && (
-        <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded bg-nb-gray-800 text-nb-gray-400 font-medium">
-          Beta
-        </span>
+      <span className="flex-shrink-0">{item.icon}</span>
+      {!collapsed && (
+        <>
+          <span className="truncate">{item.label}</span>
+          {item.beta && (
+            <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded bg-nb-gray-800 text-nb-gray-400 font-medium flex-shrink-0">
+              Beta
+            </span>
+          )}
+        </>
       )}
     </NavLink>
   );
 }
 
-export default function Sidebar() {
+export default function Sidebar({ collapsed }: SidebarProps) {
   return (
-    <aside className="fixed top-0 left-0 h-screen w-[220px] bg-nb-gray-950 border-r border-nb-gray-900 flex flex-col z-20">
-      {/* Logo */}
-      <div className="flex items-center gap-2 px-4 py-4 border-b border-nb-gray-900">
-        <span className="text-netbird font-bold text-lg">✦</span>
-        <span className="text-nb-gray-100 font-semibold text-base tracking-tight">
-          netbird
-        </span>
-      </div>
+    <aside
+      className={cn(
+        "fixed top-0 left-0 h-screen bg-nb-gray-950 border-r border-nb-gray-900",
+        "flex flex-col z-20 transition-all duration-300 overflow-hidden",
+        collapsed ? "w-16" : "w-[220px]",
+      )}
+    >
+      {/* Logo (only shown when expanded) */}
+      {!collapsed && (
+        <div className="flex items-center gap-2 px-4 h-12 border-b border-nb-gray-900 flex-shrink-0">
+          <span className="text-netbird font-bold text-lg">✦</span>
+          <span className="text-nb-gray-100 font-semibold text-sm tracking-tight">
+            netbird
+          </span>
+        </div>
+      )}
+
+      {/* Collapsed */}
+      {collapsed && <div className="h-12 flex-shrink-0" />}
 
       {/* Main nav */}
-      <nav className="flex-1 overflow-y-auto px-2 py-3 flex flex-col gap-0.5">
+      <nav className="flex-1 overflow-y-auto overflow-x-hidden px-2 py-3 flex flex-col gap-0.5">
         {navItems.map((item) => (
-          <NavItemRow key={item.to} item={item} />
+          <NavItemRow key={item.to} item={item} collapsed={collapsed} />
         ))}
       </nav>
 
       {/* Bottom nav */}
-      <div className="px-2 py-3 border-t border-nb-gray-900 flex flex-col gap-0.5">
+      <div
+        className={cn(
+          "px-2 py-3 border-t border-nb-gray-900 flex flex-col gap-0.5",
+        )}
+      >
         {bottomItems.map((item) => (
-          <NavItemRow key={item.to} item={item} />
+          <NavItemRow key={item.to} item={item} collapsed={collapsed} />
         ))}
 
-        {/* Plan indicator */}
-        <div className="mt-2 px-3 py-2 rounded bg-nb-gray-920 flex items-center gap-2">
-          <div className="w-6 h-6 rounded-full bg-nb-gray-800 flex items-center justify-center">
-            <IconUsers size={12} className="text-nb-gray-400" />
+        {/* Plan indicator (hidden when collapsed) */}
+        {!collapsed && (
+          <div className="mt-2 px-3 py-2 rounded bg-nb-gray-920 flex items-center gap-2">
+            <div className="w-6 h-6 rounded-full bg-nb-gray-800 flex items-center justify-center flex-shrink-0">
+              <IconUsers size={12} className="text-nb-gray-400" />
+            </div>
+            <div className="flex flex-col min-w-0">
+              <span className="text-xs text-nb-gray-100 font-medium">Free</span>
+              <span className="text-[10px] text-nb-gray-500">1 of 5 Users</span>
+            </div>
           </div>
-          <div className="flex flex-col">
-            <span className="text-xs text-nb-gray-100 font-medium">Free</span>
-            <span className="text-[10px] text-nb-gray-500">1 of 5 Users</span>
-          </div>
-        </div>
+        )}
       </div>
     </aside>
   );
