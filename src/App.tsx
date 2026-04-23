@@ -1,9 +1,22 @@
-function App() {
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import AppLayout from "./components/layout/AppLayout";
+import ControlCenterPage from "./pages/ControlCenterPage";
+import GroupsPage from "./pages/GroupsPage";
+import PeersPage from "./pages/PeersPage";
+import PoliciesPage from "./pages/PoliciesPage";
+
+export default function App() {
   return (
-    <div className="min-h-screen bg-nb-gray-950 text-nb-gray-100">
-      <p className="p-8 text-netbird">NetBird Dashboard — setup complete</p>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<AppLayout />}>
+          <Route index element={<ControlCenterPage />} />
+          <Route path="/peers" element={<PeersPage />} />
+          <Route path="/access-control/policies" element={<PoliciesPage />} />
+          <Route path="/access-control/groups" element={<GroupsPage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
-
-export default App;
