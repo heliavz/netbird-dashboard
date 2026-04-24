@@ -1,9 +1,16 @@
 import PoliciesTable from "@/components/access-control/PoliciesTable";
+import { IconShield } from "@tabler/icons-react";
 
 export default function PoliciesPage() {
   return (
     <div>
       <div className="mb-5">
+        <p className="text-nb-gray-500 text-sm mb-2 flex items-center gap-1.5">
+          <IconShield size={12} />
+          <span>Access Control</span>
+          <span>›</span>
+          <span>Policies</span>
+        </p>
         <h1 className="text-nb-gray-100 text-xl font-semibold mb-1">
           Access Control Policies
         </h1>
