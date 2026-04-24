@@ -10,6 +10,10 @@ Built with the same stack as the original: **React + TypeScript + Tailwind CSS +
 
 ---
 
+![Overview](screenshots/overview.png)
+
+---
+
 ## Pages included in this demo
 
 | Page                      | Status                     |
