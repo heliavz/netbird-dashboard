@@ -1,0 +1,13 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script>
+      var path =
+        window.location.pathname.replace("/netbird-dashboard", "") || "/";
+      sessionStorage.setItem("redirect", path);
+      window.location.replace("/netbird-dashboard/");
+    </script>
+  </head>
+  <body></body>
+</html>
