@@ -203,7 +203,7 @@ function NavItemRow({
         <>
           <span className="truncate">{item.label}</span>
           {item.beta && (
-            <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded bg-nb-gray-800 text-nb-gray-400 font-medium flex-shrink-0">
+            <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded bg-blue-500/50 text-white font-medium flex-shrink-0">
               Beta
             </span>
           )}

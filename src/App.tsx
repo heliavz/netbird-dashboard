@@ -1,8 +1,9 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster } from "sonner";
 import AppLayout from "./components/layout/AppLayout";
 import ControlCenterPage from "./pages/ControlCenterPage";
 import GroupsPage from "./pages/GroupsPage";
+import NotImplementedPage from "./pages/NotImplementedPage";
 import PeersPage from "./pages/PeersPage";
 import PoliciesPage from "./pages/PoliciesPage";
 
@@ -26,7 +27,8 @@ export default function App() {
           <Route path="/peers" element={<PeersPage />} />
           <Route path="/access-control/policies" element={<PoliciesPage />} />
           <Route path="/access-control/groups" element={<GroupsPage />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          {/* All other routes go to not-implemented */}
+          <Route path="*" element={<NotImplementedPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -4,7 +4,9 @@ import {
   IconLayoutSidebarLeftCollapse,
   IconLayoutSidebarLeftExpand,
 } from "@tabler/icons-react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import ProfileDropdown from "./ProfileDropdown";
 
 interface TopBarProps {
   collapsed: boolean;
@@ -12,6 +14,8 @@ interface TopBarProps {
 }
 
 export default function TopBar({ collapsed, onToggleCollapse }: TopBarProps) {
+  const [profileOpen, setProfileOpen] = useState(false);
+
   return (
     <header
       className={cn(
@@ -22,7 +26,6 @@ export default function TopBar({ collapsed, onToggleCollapse }: TopBarProps) {
     >
       {/* Left side: logo + collapse toggle */}
       <div className="flex items-center gap-1 px-3 border-r border-nb-gray-900 h-full">
-        {/* NetBird logo (only visible when sidebar is collapsed) */}
         {collapsed && (
           <Link to="/" className="flex items-center gap-2 mr-2">
             <span className="text-netbird font-bold text-lg">✦</span>
@@ -31,12 +34,11 @@ export default function TopBar({ collapsed, onToggleCollapse }: TopBarProps) {
             </span>
           </Link>
         )}
-
-        {/* Collapse toggle */}
         <button
           onClick={onToggleCollapse}
-          className="w-7 h-7 flex items-center justify-center rounded text-nb-gray-500
-                     hover:text-nb-gray-200 hover:bg-nb-gray-920 transition-colors"
+          className="w-7 h-7 flex items-center justify-center rounded
+                     text-nb-gray-500 hover:text-nb-gray-200 hover:bg-nb-gray-920
+                     transition-colors"
           title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
           {collapsed ? (
@@ -58,16 +60,25 @@ export default function TopBar({ collapsed, onToggleCollapse }: TopBarProps) {
           <IconHelp size={15} />
         </button>
 
-        {/* Avatar */}
-        <button
-          className="w-7 h-7 rounded-full bg-nb-gray-700 border border-nb-gray-600
-                     flex items-center justify-center text-xs font-medium
-                     text-nb-gray-200 hover:border-nb-gray-500 transition-colors
-                     overflow-hidden"
-          title="Profile"
-        >
-          HV
-        </button>
+        {/* Avatar + dropdown */}
+        <div className="relative">
+          <button
+            onClick={() => setProfileOpen((prev) => !prev)}
+            className={cn(
+              "w-7 h-7 rounded-full border flex items-center justify-center",
+              "text-xs font-medium text-nb-gray-200 transition-colors",
+              "bg-nb-gray-700 hover:border-nb-gray-500",
+              profileOpen ? "border-netbird" : "border-nb-gray-600",
+            )}
+            title="Profile"
+          >
+            HV
+          </button>
+
+          {profileOpen && (
+            <ProfileDropdown onClose={() => setProfileOpen(false)} />
+          )}
+        </div>
       </div>
     </header>
   );
