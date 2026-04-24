@@ -9,7 +9,7 @@ import PoliciesPage from "./pages/PoliciesPage";
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/netbird-dashboard">
       <Toaster
         position="top-center"
         toastOptions={{
