@@ -180,21 +180,21 @@ export default function GettingStartedChecklist() {
       </div>
 
       {/* Ghost network map preview */}
-      <div className="ml-11 mt-10 rounded-lg border border-nb-gray-900 bg-nb-gray-960 p-6 opacity-40 select-none">
-        <p className="text-xs text-nb-gray-500 mb-4 text-center">
+      <div className="ml-11 mt-10 rounded-lg border border-nb-gray-900 bg-nb-gray-960 p-6 select-none">
+        <p className="text-xs text-nb-gray-500 mb-6 text-center tracking-wide">
           Your network map will appear here once peers are connected
         </p>
-        <div className="flex items-center justify-center gap-6">
+        <div className="flex items-center justify-center gap-8">
           {["peer-1", "peer-2", "peer-3"].map((p) => (
-            <div key={p} className="flex flex-col items-center gap-2">
-              <div className="w-10 h-10 rounded-lg bg-nb-gray-900 border border-nb-gray-800" />
-              <div className="h-2 w-16 rounded bg-nb-gray-900" />
+            <div key={p} className="flex flex-col items-center gap-3">
+              <div className="w-14 h-14 rounded-lg bg-nb-gray-900 border border-nb-gray-800" />
+              <div className="h-2 w-20 rounded bg-nb-gray-900" />
             </div>
           ))}
         </div>
-        <div className="flex items-center justify-center gap-1 mt-4">
+        <div className="flex items-center justify-center gap-2 mt-6">
           {[...Array(8)].map((_, i) => (
-            <div key={i} className="w-1.5 h-1.5 rounded-full bg-nb-gray-900" />
+            <div key={i} className="w-2 h-2 rounded-full bg-nb-gray-850" />
           ))}
         </div>
       </div>
